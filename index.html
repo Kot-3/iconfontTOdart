@@ -1,211 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IconFont CSS to Dart Converter</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      color: #333;
-      background-color: #f5f5f5;
-    }
-    h1 {
-      color: #2c3e50;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .container {
-      display: flex;
-      gap: 20px;
-    }
-    .input-section, .output-section {
-      flex: 1;
-    }
-    .card {
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      margin-bottom: 20px;
-      height: 100%;
-    }
-    .output-card {
-      height: calc(100% - 60px);
-      display: flex;
-      flex-direction: column;
-    }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-    }
-    textarea, input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 20px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-family: monospace;
-      box-sizing: border-box;
-    }
-    textarea {
-      min-height: 200px;
-      flex-grow: 1;
-      resize: vertical;
-    }
-    .converted-text {
-      font-family: monospace;
-      background-color: #f8f8f8;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 10px;
-      white-space: pre-wrap;
-      overflow-y: auto;
-      flex-grow: 1;
-      font-size: 14px;
-    }
-    button {
-      background-color: #3498db;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s;
-      margin-right: 10px;
-    }
-    button:hover {
-      background-color: #2980b9;
-    }
-    .button-group {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
-    }
-    .instructions {
-      font-size: 14px;
-      color: #666;
-      margin-top: 30px;
-    }
-    .status {
-      margin-top: 15px;
-      font-size: 14px;
-      color: #27ae60;
-    }
-    .error {
-      color: #e74c3c;
-    }
-    .hidden {
-      display: none;
-    }
-    @media (max-width: 768px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IconFont CSS to Dart Converter</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        color: #333;
+        background-color: #f5f5f5;
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 30px;
+      }
       .container {
+        display: flex;
+        gap: 20px;
+      }
+      .input-section,
+      .output-section {
+        flex: 1;
+      }
+      .card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        height: 100%;
+      }
+      .output-card {
+        height: calc(100% - 60px);
+        display: flex;
         flex-direction: column;
       }
-    }
-  </style>
-</head>
-<body>
-  <h1>IconFont CSS to Dart Converter</h1>
-  
-  <div class="container">
-    <div class="input-section">
-      <div class="card">
-        <label for="className">Dart Class Name:</label>
-        <input type="text" id="className" value="IconFont" placeholder="e.g., IconFont, MyIcons, etc.">
-        
-        <label for="cssContent">Paste your iconfont.css content here:</label>
-        <textarea id="cssContent" placeholder="@font-face { ... }&#10;.icon-home:before { content: '\e900'; }&#10;.icon-search:before { content: '\e901'; }&#10;..."></textarea>
-        
-        <div class="button-group">
-          <button id="convertButton">Convert to Dart</button>
-          <div id="status" class="status hidden"></div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="output-section">
-      <div class="card output-card">
-        <label for="dartCode">Generated Dart Code:</label>
-        <div id="dartCode" class="converted-text">// Your converted Dart code will appear here</div>
-        
-        <div class="button-group">
-          <button id="copyButton">Copy to Clipboard</button>
-          <button id="downloadButton">Download Dart File</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="instructions">
-    <h3>How to use:</h3>
-    <ol>
-      <li>Enter a name for your Dart class (e.g., IconFont, MyIcons)</li>
-      <li>Paste the contents of your iconfont.css file</li>
-      <li>Click "Convert to Dart"</li>
-      <li>Copy the generated code or download it as a Dart file</li>
-      <li>Import the generated file in your Flutter project</li>
-    </ol>
-    <p>The converter extracts icon names and Unicode points from your CSS file and generates a Flutter-compatible Dart class with IconData objects.</p>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const convertButton = document.getElementById('convertButton');
-      const copyButton = document.getElementById('copyButton');
-      const downloadButton = document.getElementById('downloadButton');
-      const classNameInput = document.getElementById('className');
-      const cssContentInput = document.getElementById('cssContent');
-      const dartCodeOutput = document.getElementById('dartCode');
-      const statusElement = document.getElementById('status');
-      
-      function showStatus(message, isError = false) {
-        statusElement.textContent = message;
-        statusElement.classList.remove('hidden');
-        statusElement.classList.toggle('error', isError);
-        
-        // Clear status after 3 seconds
-        setTimeout(() => {
-          statusElement.classList.add('hidden');
-        }, 3000);
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
       }
-      
-      function convertIconFontCssToDart(cssContent, className = 'IconFont') {
-        try {
-          // Extract icon definitions using regex
-          const iconRegex = /\.icon-([^:]+):before\s*{\s*content:\s*"\\([^"]+)"/g;
-          let match;
-          const icons = [];
-          
-          while ((match = iconRegex.exec(cssContent)) !== null) {
-            const name = match[1];
-            const unicodePoint = match[2];
-            
-            // Convert CSS kebab-case to Dart camelCase
-            const dartName = name.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
-            
-            icons.push({
-              originalName: name,
-              dartName,
-              unicodePoint
-            });
-          }
-          
-          if (icons.length === 0) {
-            throw new Error('No icons found in the CSS content. Make sure the format matches: .icon-name:before { content: "\\eXXX"; }');
-          }
-          
-          // Generate Dart class
-          let dartCode = `import 'package:flutter/widgets.dart';
+      textarea,
+      input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-family: monospace;
+        box-sizing: border-box;
+      }
+      textarea {
+        min-height: 200px;
+        flex-grow: 1;
+        resize: vertical;
+      }
+      .converted-text {
+        font-family: monospace;
+        background-color: #f8f8f8;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 10px;
+        white-space: pre-wrap;
+        overflow-y: auto;
+        flex-grow: 1;
+        font-size: 14px;
+      }
+      button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        margin-right: 10px;
+      }
+      button:hover {
+        background-color: #2980b9;
+      }
+      .button-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+      .instructions {
+        font-size: 14px;
+        color: #666;
+        margin-top: 30px;
+      }
+      .status {
+        margin-top: 15px;
+        font-size: 14px;
+        color: #27ae60;
+      }
+      .error {
+        color: #e74c3c;
+      }
+      .hidden {
+        display: none;
+      }
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>IconFont CSS to Dart Converter</h1>
+
+    <div class="container">
+      <div class="input-section">
+        <div class="card">
+          <label for="className">Dart Class Name:</label>
+          <input
+            type="text"
+            id="className"
+            value="IconFont"
+            placeholder="e.g., IconFont, MyIcons, etc."
+          />
+
+          <label for="cssContent">Paste your iconfont.css content here:</label>
+          <textarea
+            id="cssContent"
+            placeholder="@font-face { ... }&#10;.icon-home:before { content: '\e900'; }&#10;.icon-search:before { content: '\e901'; }&#10;..."
+          ></textarea>
+
+          <div class="button-group">
+            <button id="convertButton">Convert to Dart</button>
+            <div id="status" class="status hidden"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="output-section">
+        <div class="card output-card">
+          <label for="dartCode">Generated Dart Code:</label>
+          <div id="dartCode" class="converted-text">
+            // Your converted Dart code will appear here
+          </div>
+
+          <div class="button-group">
+            <button id="copyButton">Copy to Clipboard</button>
+            <button id="downloadButton">Download Dart File</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="instructions">
+      <h3>How to use:</h3>
+      <ol>
+        <li>Enter a name for your Dart class (e.g., IconFont, MyIcons)</li>
+        <li>Paste the contents of your iconfont.css file</li>
+        <li>Click "Convert to Dart"</li>
+        <li>Copy the generated code or download it as a Dart file</li>
+        <li>Import the generated file in your Flutter project</li>
+      </ol>
+      <p>
+        The converter extracts icon names and Unicode points from your CSS file
+        and generates a Flutter-compatible Dart class with IconData objects.
+      </p>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const convertButton = document.getElementById("convertButton");
+        const copyButton = document.getElementById("copyButton");
+        const downloadButton = document.getElementById("downloadButton");
+        const classNameInput = document.getElementById("className");
+        const cssContentInput = document.getElementById("cssContent");
+        const dartCodeOutput = document.getElementById("dartCode");
+        const statusElement = document.getElementById("status");
+
+        function showStatus(message, isError = false) {
+          statusElement.textContent = message;
+          statusElement.classList.remove("hidden");
+          statusElement.classList.toggle("error", isError);
+
+          // Clear status after 3 seconds
+          setTimeout(() => {
+            statusElement.classList.add("hidden");
+          }, 3000);
+        }
+
+        function convertIconFontCssToDart(cssContent, className = "IconFont") {
+          try {
+            // Extract icon definitions using regex
+            const iconRegex =
+              /\.icon-([^:]+):before\s*{\s*content:\s*"\\([^"]+)"/g;
+            let match;
+            const icons = [];
+
+            while ((match = iconRegex.exec(cssContent)) !== null) {
+              const name = match[1];
+              const unicodePoint = match[2];
+
+              // Convert CSS kebab-case to Dart camelCase
+              const dartName = name.replace(/-([a-z])/g, (g) =>
+                g[1].toUpperCase()
+              );
+
+              icons.push({
+                originalName: name,
+                dartName,
+                unicodePoint,
+              });
+            }
+
+            if (icons.length === 0) {
+              throw new Error(
+                'No icons found in the CSS content. Make sure the format matches: .icon-name:before { content: "\\eXXX"; }'
+              );
+            }
+
+            // Generate Dart class
+            let dartCode = `import 'package:flutter/widgets.dart';
 
 /// ${className} - Generated from iconfont.css
 ///
-/// Generated on ${new Date().toISOString().split('T')[0]}
+/// Generated on ${new Date().toISOString().split("T")[0]}
 class ${className} {
   // This class is not meant to be instantiated
   ${className}._();
@@ -214,79 +235,80 @@ class ${className} {
   
   // IconData for each icon
 `;
-          
-          // Add all icon definitions
-          icons.forEach(icon => {
-            dartCode += `  /// Icon name in CSS: icon-${icon.originalName}
+
+            // Add all icon definitions
+            icons.forEach((icon) => {
+              dartCode += `  /// Icon name in CSS: icon-${icon.originalName}
   static const IconData ${icon.dartName} = IconData(0x${icon.unicodePoint}, fontFamily: _fontFamily);\n\n`;
-          });
-          
-          dartCode += '}';
-          
-          return {
-            success: true,
-            dartCode,
-            iconCount: icons.length
-          };
-        } catch (error) {
-          return {
-            success: false,
-            error: error.message
-          };
+            });
+
+            dartCode += "}";
+
+            return {
+              success: true,
+              dartCode,
+              iconCount: icons.length,
+            };
+          } catch (error) {
+            return {
+              success: false,
+              error: error.message,
+            };
+          }
         }
-      }
-      
-      // Convert button click handler
-      convertButton.addEventListener('click', () => {
-        const className = classNameInput.value.trim() || 'IconFont';
-        const cssContent = cssContentInput.value.trim();
-        
-        if (!cssContent) {
-          showStatus('Please paste your iconfont.css content', true);
-          return;
-        }
-        
-        const result = convertIconFontCssToDart(cssContent, className);
-        
-        if (result.success) {
-          dartCodeOutput.textContent = result.dartCode;
-          showStatus(`Successfully converted ${result.iconCount} icons`);
-        } else {
-          showStatus(`Error: ${result.error}`, true);
-        }
+
+        // Convert button click handler
+        convertButton.addEventListener("click", () => {
+          const className = classNameInput.value.trim() || "IconFont";
+          const cssContent = cssContentInput.value.trim();
+
+          if (!cssContent) {
+            showStatus("Please paste your iconfont.css content", true);
+            return;
+          }
+
+          const result = convertIconFontCssToDart(cssContent, className);
+
+          if (result.success) {
+            dartCodeOutput.textContent = result.dartCode;
+            showStatus(`Successfully converted ${result.iconCount} icons`);
+          } else {
+            showStatus(`Error: ${result.error}`, true);
+          }
+        });
+
+        // Copy button click handler
+        copyButton.addEventListener("click", () => {
+          const dartCode = dartCodeOutput.textContent;
+          navigator.clipboard
+            .writeText(dartCode)
+            .then(() => {
+              showStatus("Copied to clipboard!");
+            })
+            .catch((err) => {
+              showStatus("Failed to copy text: " + err, true);
+            });
+        });
+
+        // Download button click handler
+        downloadButton.addEventListener("click", () => {
+          const dartCode = dartCodeOutput.textContent;
+          const className = classNameInput.value.trim() || "IconFont";
+          const fileName = `${className.toLowerCase()}.dart`;
+
+          const blob = new Blob([dartCode], { type: "text/plain" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+
+          showStatus(`Downloaded as ${fileName}`);
+        });
       });
-      
-      // Copy button click handler
-      copyButton.addEventListener('click', () => {
-        const dartCode = dartCodeOutput.textContent;
-        navigator.clipboard.writeText(dartCode)
-          .then(() => {
-            showStatus('Copied to clipboard!');
-          })
-          .catch(err => {
-            showStatus('Failed to copy text: ' + err, true);
-          });
-      });
-      
-      // Download button click handler
-      downloadButton.addEventListener('click', () => {
-        const dartCode = dartCodeOutput.textContent;
-        const className = classNameInput.value.trim() || 'IconFont';
-        const fileName = `${className.toLowerCase()}.dart`;
-        
-        const blob = new Blob([dartCode], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        
-        showStatus(`Downloaded as ${fileName}`);
-      });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
